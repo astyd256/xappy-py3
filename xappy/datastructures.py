@@ -27,10 +27,10 @@ try:
     from hashlib import sha1 as hashlib_sha1
 except ImportError:
     from sha import sha as hashlib_sha1
-import errors
-from fields import Field, FieldGroup
+from . import errors
+from .fields import Field, FieldGroup
 import xapian
-import cPickle
+import pickle
 
 class UnprocessedDocument(object):
     """A unprocessed document to be passed to the indexer.

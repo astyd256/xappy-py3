@@ -24,9 +24,9 @@ r"""cachemanager: Caches of results for particular queries.
 """
 __docformat__ = "restructuredtext en"
 
-from generic import CacheManager, KeyValueStoreCacheManager
+from .generic import CacheManager, KeyValueStoreCacheManager
 try:
-    from xapian_manager import \
+    from .xapian_manager import \
         XapianCacheManager, \
         XapianSelfInvertingCacheManager
 except ImportError:

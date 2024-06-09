@@ -24,14 +24,12 @@ r"""mset_search_results.py: The results of a search performed against xapian.
 """
 __docformat__ = "restructuredtext en"
 
-import _checkxapian
-
-import errors
-from fieldactions import FieldActions
-from indexerconnection import IndexerConnection
+from . import _checkxapian, errors
+from .fieldactions import FieldActions
+from .indexerconnection import IndexerConnection
 import math
 import re
-from searchresults import SearchResult
+from .searchresults import SearchResult
 import xapian
 
 class MSetTermWeightGetter(object):

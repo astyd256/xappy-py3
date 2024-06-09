@@ -24,9 +24,9 @@ r"""generic.py: Base cachemanager classes.
 """
 __docformat__ = "restructuredtext en"
 
-import cPickle
+import pickle
 import operator
-import UserDict
+from collections import MutableMapping
 try:
     from hashlib import md5
 except ImportError:
@@ -36,7 +36,7 @@ try:
     from numpy_inverter import NumpyInverterMixIn
     InverterMixIn = NumpyInverterMixIn
 except ImportError:
-    from inmemory_inverter import InMemoryInverterMixIn
+    from .inmemory_inverter import InMemoryInverterMixIn
     InverterMixIn = InMemoryInverterMixIn
 
 def sort_facets(facets):
@@ -277,7 +277,7 @@ class CacheManager(object):
         """
         raise NotImplementedError
 
-class KeyValueStoreCacheManager(InverterMixIn, UserDict.DictMixin,
+class KeyValueStoreCacheManager(InverterMixIn, MutableMapping,
                                 CacheManager):
     """A manager that stores the cached items in chunks in a key-value store.
 
@@ -312,8 +312,8 @@ class KeyValueStoreCacheManager(InverterMixIn, UserDict.DictMixin,
      - 'F': Followed by a queryid, contains the facets for that query.
 
     """
-    encode = staticmethod(lambda x: cPickle.dumps(x, 2))
-    decode = staticmethod(cPickle.loads)
+    encode = staticmethod(lambda x: pickle.dumps(x, 2))
+    decode = staticmethod(pickle.loads)
 
     encode_int = encode
     decode_int = decode

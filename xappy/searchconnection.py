@@ -24,27 +24,25 @@ r"""searchconnection.py: A connection to the search engine for searching.
 """
 __docformat__ = "restructuredtext en"
 
-import _checkxapian
+from . import _checkxapian
 import os as _os
-import cPickle as _cPickle
+import pickle as _cPickle
 import math
 import inspect
 import itertools
 
 import xapian
-from cache_search_results import CacheResultOrdering
-import cachemanager
-from datastructures import UnprocessedDocument, ProcessedDocument
-from fieldactions import ActionContext, FieldActions, \
+from . import cachemanager, fieldmappings, errors
+from .cache_search_results import CacheResultOrdering
+from .datastructures import UnprocessedDocument, ProcessedDocument
+from .fieldactions import ActionContext, FieldActions, \
          ActionSet, SortableMarshaller, convert_range_to_term, \
          _get_imgterms
-import fieldmappings
-import errors
-from indexerconnection import IndexerConnection, PrefixedTermIter, \
+from .indexerconnection import IndexerConnection, PrefixedTermIter, \
          DocumentIter, SynonymIter, _allocate_id
-from query import Query
-from searchresults import SearchResults, SearchResultContext
-from mset_search_results import FacetResults, NoFacetResults, \
+from .query import Query
+from .searchresults import SearchResults, SearchResultContext
+from .mset_search_results import FacetResults, NoFacetResults, \
          MSetResultOrdering, ResultStats, MSetTermWeightGetter
 
 class ExternalWeightSource(object):
@@ -165,7 +163,7 @@ class SearchConnection(object):
             try:
                 config_str = self._index.get_metadata('_xappy_config')
                 break
-            except xapian.DatabaseModifiedError, e:
+            except xapian.DatabaseModifiedError as e:
                 # Don't call self.reopen() since that calls _load_config()!
                 self._index.reopen()
 
@@ -265,7 +263,7 @@ class SearchConnection(object):
         for handler, userdata in self._close_handlers:
             try:
                 handler(indexpath, userdata)
-            except Exception, e:
+            except Exception as e:
                 import sys, traceback
                 print >>sys.stderr, "WARNING: unhandled exception in handler called by SearchConnection.close(): %s" % traceback.format_exception_only(type(e), e)
 
@@ -1201,7 +1199,7 @@ class SearchConnection(object):
                                                self._qp_flags_synonym |
                                                self._qp_flags_bool,
                                                prefix)
-        except xapian.QueryParserError, e:
+        except xapian.QueryParserError as e:
             # If we got a parse error, retry without boolean operators (since
             # these are the usual cause of the parse error).
             q1 = self._query_parse_with_prefix(qp, string,
@@ -1216,7 +1214,7 @@ class SearchConnection(object):
                                                base_flags |
                                                self._qp_flags_bool,
                                                prefix)
-        except xapian.QueryParserError, e:
+        except xapian.QueryParserError as e:
             # If we got a parse error, retry without boolean operators (since
             # these are the usual cause of the parse error).
             q2 = self._query_parse_with_prefix(qp, string, base_flags, prefix)
@@ -1514,7 +1512,7 @@ class SearchConnection(object):
             try:
                 eterms = self._perform_expand(ids, prefixes, simterms, tempdb)
                 break;
-            except xapian.DatabaseModifiedError, e:
+            except xapian.DatabaseModifiedError as e:
                 self.reopen()
         return eterms, prefixes
 
@@ -1894,7 +1892,7 @@ class SearchConnection(object):
             try:
                 mset = enq.get_mset(0, 0)
                 break
-            except xapian.DatabaseModifiedError, e:
+            except xapian.DatabaseModifiedError as e:
                 self.reopen()
         return mset.get_max_possible()
 
@@ -2286,7 +2284,7 @@ class SearchConnection(object):
                 try:
                     mset = enq.get_mset(startrank, real_maxitems, checkatleast)
                     break
-                except xapian.DatabaseModifiedError, e:
+                except xapian.DatabaseModifiedError as e:
                     self.reopen()
         else:
             mset = None
@@ -2413,7 +2411,7 @@ class SearchConnection(object):
                 result = ProcessedDocument(self._field_mappings)
                 result._doc = self._index.get_document(xapid)
                 return result
-            except xapian.DatabaseModifiedError, e:
+            except xapian.DatabaseModifiedError as e:
                 self.reopen()
 
     def iter_synonyms(self, prefix=""):
@@ -2461,7 +2459,7 @@ class SearchConnection(object):
         while True:
             try:
                 return self._index.get_metadata(key)
-            except xapian.DatabaseModifiedError, e:
+            except xapian.DatabaseModifiedError as e:
                 self.reopen()
 
     def iter_terms_for_field(self, field, starts_with=''):

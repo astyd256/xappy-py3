@@ -24,12 +24,11 @@ r"""searchresults.py: Access to the results of a search.
 """
 __docformat__ = "restructuredtext en"
 
-from datastructures import UnprocessedDocument, ProcessedDocument
-import errors
-from fieldactions import FieldActions
-from fields import Field
-import highlight
-from utils import get_significant_digits, add_to_dict_of_dicts
+from .datastructures import UnprocessedDocument, ProcessedDocument
+from . import errors, highlight
+from .fieldactions import FieldActions
+from .fields import Field
+from .utils import get_significant_digits, add_to_dict_of_dicts
 
 class SearchResultContext(object):
     """A context used by SearchResult objects to get various pieces of

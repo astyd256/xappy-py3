@@ -22,7 +22,7 @@ r"""cache_search_results.py: The results of a search from a cache.
 """
 __docformat__ = "restructuredtext en"
 
-from searchresults import SearchResult
+from .searchresults import SearchResult
 try:
     import simplejson as json
 except ImportError:

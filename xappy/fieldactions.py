@@ -24,16 +24,13 @@ __docformat__ = "restructuredtext en"
 
 import collections
 
-import _checkxapian
-import errors
-import fields
-import marshall
+from . import _checkxapian, errors, fields, marshall, parsedate
 import xapian
 try:
     import xapian.imgseek
 except ImportError:
     pass
-import parsedate
+
 
 def _act_store_content(fieldname, doc, field, context, link_associations=True):
     """Perform the STORE_CONTENT action.
@@ -321,7 +318,7 @@ class SortableMarshaller(object):
         """
         try:
             value = parsedate.date_from_string(value)
-        except ValueError, e:
+        except ValueError as e:
             raise self._err("Value supplied to field %r must be a "
                             "valid date: was %r: error is '%s'" %
                             (fieldname, value, str(e)))

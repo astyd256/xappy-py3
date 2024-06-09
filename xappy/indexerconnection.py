@@ -23,16 +23,13 @@ r"""indexerconnection.py: A connection to the search engine for indexing.
 """
 __docformat__ = "restructuredtext en"
 
-import _checkxapian
-import cPickle
+from . import _checkxapian, errors, fieldmappings, memutils, cachemanager
+import pickle
 import xapian
 
-import cachemanager
-from datastructures import *
-import errors
-from fieldactions import ActionContext, FieldActions, ActionSet
-import fieldmappings
-import memutils
+from .datastructures import *
+from .fieldactions import ActionContext, FieldActions, ActionSet
+
 import os
 
 def _allocate_id(index, next_docid):

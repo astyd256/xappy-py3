@@ -22,7 +22,7 @@ r"""fieldmappings.py: Mappings from field names to term prefixes, etc.
 """
 __docformat__ = "restructuredtext en"
 
-import cPickle as _cPickle
+import pickle as _cPickle
 
 class FieldMappings(object):
     """Mappings from field names to term prefixes, slot values, etc.

@@ -23,7 +23,7 @@ r"""query.py: Query representations.
 """
 __docformat__ = "restructuredtext en"
 
-import _checkxapian
+from . import _checkxapian
 import copy
 import xapian
 
